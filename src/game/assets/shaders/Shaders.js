@@ -3,10 +3,19 @@ import skyFrag from './sky.frag.js'
 import darkenMinusX from './darken-x.frag.js'
 import darkenMinusY from './darken-y.frag.js'
 
+import lightenMinusX from './lighten-x.frag.js'
+import lightenMinusY from './lighten-y.frag.js'
+
 const darkenMinusXShader = new PIXI.Filter('', darkenMinusX);
 const darkenMinusYShader = new PIXI.Filter('', darkenMinusY);
 export function darken() {
     return [darkenMinusXShader, darkenMinusYShader];
+}
+
+const lightenMinusXShader = new PIXI.Filter('', lightenMinusX);
+const lightenMinusYShader = new PIXI.Filter('', lightenMinusY);
+export function lighten() {
+    return [lightenMinusXShader, lightenMinusYShader];
 }
 
 const skyUniforms = {

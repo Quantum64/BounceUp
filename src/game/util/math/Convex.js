@@ -12,6 +12,7 @@
 
 export default class Convex {
     static decomp = polygonDecomp;
+    static fastDecomp = polygonQuickDecomp;
     static makeCCW = polygonMakeCCW;
 }
 

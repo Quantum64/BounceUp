@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as planck from 'planck-js';
-import * as util from './util';
+import * as util from './util/Util';
 
 class Point {
     constructor(x, y) {

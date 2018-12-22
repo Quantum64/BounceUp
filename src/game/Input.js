@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
 import Point from './Point';
-import * as util from './util';
+import * as util from './util/Util';
 
 class Input {
     constructor(world) {
@@ -21,7 +21,7 @@ class Input {
         graphics.rotation = 0;
         this.line = new PIXI.Sprite(graphics.generateCanvasTexture());
         this.line.alpha = 0.2;
-        this.app.stage.addChild(this.line);
+        this.world.window.addChild(this.line);
 
         this.app.stage.mousemove = (event) => this.mouseMove(event);
         this.app.stage.mousedown = (event) => this.mouseDown(event);
@@ -47,7 +47,7 @@ class Input {
         }
 
         // cheat mode
-        //this.multiplier = 1;
+        this.multiplier = 1;
     }
 
     mouseDown(event) {
@@ -57,6 +57,7 @@ class Input {
             return;
         }
 
+        this.mouseMove(event); // Hack??
         const center = util.getScreenCenter();
         const ang = Math.atan2(this.mouse.y - center.y, this.mouse.x - center.x);
         const x = -Math.cos(ang) * force * util.scaleToPhysics(this.force) * this.multiplier;

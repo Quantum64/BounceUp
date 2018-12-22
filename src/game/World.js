@@ -1,37 +1,34 @@
 import * as planck from 'planck-js';
 import * as PIXI from 'pixi.js';
 import Point from './Point';
-import * as util from './util';
+import * as util from './util/Util';
 import Input from './Input';
-import * as textures from './shaders/shaders';
-import Triangulator from './math/triangulate'
-import Convex from './math/convex'
+import * as shaders from './assets/shaders/Shaders';
+import Triangulator from './util/math/Triangulate'
+import Convex from './util/math/Convex';
 import * as PIXIParticles from 'pixi-particles';
+import Resources from './Resources';
+import Sprites from './assets/sprites/Sprites'
 
-const definitions = {
-    ground: {
-        points: [[0, 200], [100, 190], [200, 170], [300, 120], [400, 40], [500, 20], [600, 30], [700, 60], [800, 40], [850, 10],
-        [5000, 10], [5000, 700], [200, 700], [100, 600], [60, 400]],
-        internal: 2,
-        colors: [{ color: 0xd3c7a2, position: 0 }, { color: 0xa69150, position: 150 }, { color: 0xdbd1b4, position: 300 }]
-    },
-    tree: {
-        points: [[250, 0], [300, 0], [300, 400], [250, 400], [250, 200], [110, 220], [50, 190], [35, 150], [50, 180], [100, 200], [250, 180]],
-        internal: 2,
-        colors: [{ color: 0x44340d, position: 0 }, { color: 0x4f3a07, position: 200 }]
-    }
-}
+const darkenShaders = shaders.darken();
+const lightenShaders = shaders.lighten();
 
-const darkenShaders = textures.darken();
-
-const bakeScale = 2;
+const bakeScale = 1.5;
 
 class World {
     constructor(game) {
+        this.definitions = game.level.definitions;
         this.game = game;
+        this.level = game.level;
         this.app = this.game.app;
         this.input = new Input(this);
         this.objects = [];
+        this.generated = [];
+        this.initialPlayerPosition = new Point(400, 100);
+        this.window = new PIXI.Container();
+    }
+
+    init() {
         this.physics = planck.World({
             gravity: planck.Vec2(0, 0.01)
         });
@@ -46,55 +43,56 @@ class World {
         });
 
         // Generate stage textures
-        for (const key in definitions) {
-            const definition = definitions[key];
-            let max = 0;
-            //for (const point of definition.points) {
-            //    if (point[1] > max) {
-            //        max = point[1]
-            //    }
-            //}
-            definition.max = max;
-            //definition.points = definition.points.map(point => {
-            //    point[1] = max - point[1];
-            //    return point;
-            //});
+        for (const key in this.definitions) {
+            const definition = this.definitions[key];
+            const start = new Date();
             Convex.makeCCW(definition.points);
             //definition.points.reverse();
             definition.shapes = [];
-            for (const polygon of Convex.decomp(definition.points)) {
+            for (const polygon of Convex.fastDecomp(definition.points)) {
                 definition.shapes.push({
                     points: polygon.map(array => new Point(array[0], array[1]))
                 });
             }
-            console.log("Definition '" + key + "' was split into " + definition.shapes.length + " convex polygons.");
+            console.log("Definition '" + key + "' was split into " + definition.shapes.length + " convex polygons (" + (new Date() - start) + " ms).");
+            let area = 0;
+            for (let shape of definition.shapes) {
+                area += util.polygonArea(shape.points);
+            }
             for (let index = 0; index < definition.shapes.length; index++) {
                 const shape = definition.shapes[index];
                 shape.texture = this.bakeStageTexture({
                     name: key,
                     index: index,
-                    internal: definition.internal,
+                    internal: Math.ceil((util.polygonArea(shape.points) / area) * definition.internal),
                     points: shape.points,
                     colors: definition.colors
                 });
             }
         }
-    }
-
-    init() {
+        
         // Background
-        this.backgroundShader = textures.sky();
+        this.backgroundShader = shaders.sky();
         this.background = new PIXI.Graphics();
         this.background.beginFill(0x111111);
         this.background.drawRect(0, 0, this.app.renderer.width + 20, this.app.renderer.height + 20);
         this.background.filters = [this.backgroundShader.shader]
+        this.background.x = -10;
+        this.background.y = -10;
         this.app.stage.addChild(this.background);
-
-        this.addStageObject(850, -380, definitions.tree);
-        this.addStageObject(0, 0, definitions.ground);
-
+        
+        for (const object of this.level.objects) {
+            this.addStageObject(object.x, object.y * -1, this.definitions[object.name]);
+        }
+        for (const sprite of this.level.sprites) {
+            const scale = sprite.scale === undefined ? 1 : sprite.scale;
+            this.addSprite(sprite.x, sprite.y * -1, sprite.sheet, sprite.name, scale);
+        }
+        
         this.createPlayer();
         this.input.init();
+
+        this.app.stage.addChild(this.window);
     }
 
     tick(delta) {
@@ -105,10 +103,8 @@ class World {
         this.player.sprite.x = util.scaleToWorld(playerPosition.x);
         this.player.sprite.y = util.scaleToWorld(playerPosition.y);
         this.player.sprite.rotation += this.player.body.getAngularVelocity() * delta;
-        this.app.stage.position.set(center.x - this.player.sprite.x, center.y - this.player.sprite.y);
+        this.window.position.set(center.x - this.player.sprite.x, center.y - this.player.sprite.y);
 
-        this.background.x = this.player.sprite.x - center.x - 10;
-        this.background.y = this.player.sprite.y - center.y - 10;
         this.tracer.updateOwnerPos(this.player.sprite.x, this.player.sprite.y);
         this.tracer.update(delta * 0.01);
 
@@ -124,7 +120,9 @@ class World {
         graphics.drawCircle(0, 0, playerSize);
         graphics.beginFill(0xff0000);
         graphics.drawCircle(4, 0, playerSize / 3);
-        const sprite = new PIXI.Sprite(this.app.renderer.generateTexture(graphics));
+        const texture = this.app.renderer.generateTexture(graphics);
+        this.generated.push(texture);
+        const sprite = new PIXI.Sprite(texture);
         sprite.anchor.x = 0.5;
         sprite.anchor.y = 0.5;
         sprite.x = 200;
@@ -133,7 +131,7 @@ class World {
         // Physics
         const body = this.physics.createBody({
             type: 'dynamic',
-            position: planck.Vec2(40, -4),
+            position: this.initialPlayerPosition.scaleToPhysics().toVec2(),
             bullet: true,
             linearDamping: 0.005,
             allowSleep: false
@@ -149,7 +147,7 @@ class World {
         const container = new PIXI.Container();
         this.tracer = new PIXIParticles.Emitter(
             container,
-            [PIXI.loader.resources["particle"].texture],
+            [Resources.getResource(Resources.loaded.tracer).texture],
             {
                 "alpha": {
                     "start": 1,
@@ -200,8 +198,8 @@ class World {
             }
         );
         this.tracer.emit = true;
-        this.app.stage.addChild(container);
-        this.app.stage.addChild(sprite);
+        this.window.addChild(container);
+        this.window.addChild(sprite);
 
         this.player = {
             sprite: sprite,
@@ -209,16 +207,16 @@ class World {
         }
     }
 
-    bakeStageTexture(def) {
-        def = {
-            ...def,
-            points: def.points.map(point => point.multiply(bakeScale, bakeScale)),
-            colors: def.colors.map(color => { return { color: color.color, position: color.position * bakeScale } })
+    bakeStageTexture(definition) {
+        definition = {
+            ...definition,
+            points: definition.points.map(point => point.multiply(bakeScale, bakeScale)),
+            colors: definition.colors.map(color => { return { color: color.color, position: color.position * bakeScale } })
         }
         const start = new Date();
         const graphics = new PIXI.Graphics();
         graphics.beginFill(0x000000);
-        graphics.drawPolygon(def.points.map(point => point.multiply(1, 1).toPixiPoint()));
+        graphics.drawPolygon(definition.points.map(point => point.multiply(1, 1).toPixiPoint()));
         graphics.endFill();
         const bounds = graphics.getBounds();
         const container = new PIXI.Container();
@@ -226,15 +224,15 @@ class World {
         const pointsets = [];
         const internal = [];
 
-        for (let i = 0; i < def.internal; i++) {
+        for (let i = 0; i < definition.internal; i++) {
             let point = null;
             do {
                 point = new Point(bounds.x + Math.floor(Math.random() * bounds.width), bounds.y + Math.floor(Math.random() * bounds.height));
-            } while (!util.inside(point.toArray(), def.points.map(point => point.toArray())));
+            } while (!util.inside(point.toArray(), definition.points.map(point => point.toArray())));
             internal.push(point);
         }
 
-        const points = [...def.points, ...internal];
+        const points = [...definition.points, ...internal];
         const triangles = Triangulator.from(points.map(point => point.toArray())).triangles;
         for (let i = 0; i < triangles.length; i += 3) {
             pointsets.push([
@@ -259,7 +257,7 @@ class World {
             let primaryDistance = -1;
             let accent = 0xffffff;
             let accentDistance = -1;
-            for (const color of def.colors) {
+            for (const color of definition.colors) {
                 const disance = Math.abs(x - color.position);
                 if (primaryDistance === -1) {
                     primaryDistance = disance;
@@ -287,7 +285,7 @@ class World {
             const tex = this.app.renderer.generateTexture(texture);
             textures.push(tex);
             const sprite = new PIXI.Sprite(tex);
-            sprite.filters = [darkenShaders[index % darkenShaders.length]];
+            sprite.filters = [lightenShaders[index % lightenShaders.length]];
             sprite.blendMode = PIXI.BLEND_MODES.ADD;
             sprite.x = shape.x;
             sprite.y = shape.y;
@@ -297,30 +295,30 @@ class World {
         const render = new PIXI.RenderTexture(new PIXI.BaseRenderTexture(bounds.width + bounds.x, bounds.height + bounds.y, PIXI.SCALE_MODES.LINEAR, 1));
         this.app.renderer.render(container, render);
         for (const texture of textures) {
-            texture.destroy();
+            texture.destroy(true);
         }
 
         const end = new Date();
-        console.log("Texture '" + def.name + "' polygon " + def.index + " bake took " + (end - start) + "ms");
+        console.log("Texture '" + definition.name + "' polygon " + definition.index + " (Internal: " + definition.internal + ") bake took " + (end - start) + "ms");
 
+        this.generated.push(render);
         return render;
     }
 
-    addStageObject(x, y, def) {
-        let index = 0;
-        for (const shape of def.shapes) {
-            index++;
+    addStageObject(x, y, definition) {
+        console.log(definition)
+        for (const shape of definition.shapes) {
             // Graphics
             const sprite = new PIXI.Sprite(shape.texture);
             sprite.x = x;
-            sprite.y = y - def.max;
+            sprite.y = y;
             sprite.scale.x = 1 / bakeScale;
             sprite.scale.y = 1 / bakeScale;
-            this.app.stage.addChild(sprite);
+            this.window.addChild(sprite);
 
             // Physics
             const fixture = this.physicsStage.createFixture({
-                shape: planck.Polygon(shape.points.map(point => point.add(x, y - def.max).scaleToPhysics().toVec2())),
+                shape: planck.Polygon(shape.points.map(point => point.add(x, y).scaleToPhysics().toVec2())),
                 friction: 0.9,
                 restitution: 0.8
             });
@@ -332,6 +330,27 @@ class World {
             };
             this.objects.push(object);
         }
+    }
+
+    addSprite(x, y, sheet, name, scale = 1) {
+        const result = Sprites.create(sheet, name, this.physicsStage, x, y, scale);
+        this.window.addChild(result.sprite);
+
+        if (result.debug.length > 0) {
+            let graphics = new PIXI.Graphics();
+            graphics.beginFill(0xffffff);
+            for (let polygon of result.debug) {
+                graphics.drawPolygon(polygon.map(point => point.toPixiPoint()));
+            }
+            graphics.endFill();
+            this.window.addChild(graphics);
+        }
+
+        this.objects.push(result);
+    }
+
+    getGeneratedTextures() {
+        return this.generated;
     }
 }
 

@@ -1,0 +1,376 @@
+export default {
+    "frames": {
+        "apple": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "avocado": {
+            "frame": {
+                "x": 300,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "banana": {
+            "frame": {
+                "x": 600,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "blackberry": {
+            "frame": {
+                "x": 900,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "cherry": {
+            "frame": {
+                "x": 1200,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "coconut": {
+            "frame": {
+                "x": 1500,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "fig": {
+            "frame": {
+                "x": 0,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "grapes": {
+            "frame": {
+                "x": 300,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "kiwi": {
+            "frame": {
+                "x": 600,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "lemon": {
+            "frame": {
+                "x": 900,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "mango": {
+            "frame": {
+                "x": 1200,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "orange": {
+            "frame": {
+                "x": 1500,
+                "y": 300,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "peach": {
+            "frame": {
+                "x": 0,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "pear": {
+            "frame": {
+                "x": 300,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "pineapple": {
+            "frame": {
+                "x": 600,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "plum": {
+            "frame": {
+                "x": 900,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "strawberry": {
+            "frame": {
+                "x": 1200,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        },
+        "watermelon": {
+            "frame": {
+                "x": 1500,
+                "y": 600,
+                "w": 300,
+                "h": 300
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 300,
+                "h": 300
+            },
+            "sourceSize": {
+                "w": 300,
+                "h": 300
+            }
+        }
+    },
+    "meta": {
+        "app": "https://www.codeandweb.com/texturepacker",
+        "version": "1.0",
+        "image": "fruit.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 1800,
+            "h": 900
+        },
+        "scale": "1",
+        "smartupdate": "$TexturePacker:SmartUpdate:c2ae69e28ac167673b2827a38aee3d8a:12a050e10b97a3fd5179cb595618f12a:a2a2182a87aec7c2742d42359809aa8c$"
+    }
+}
