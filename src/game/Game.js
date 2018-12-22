@@ -31,13 +31,13 @@ class Game {
                 position = new Point(this.content.player.sprite.x, this.content.player.sprite.y);
             }
             this.editor = !this.editor;
-            this.loading.x = position.x - (this.loading.width / 2);
-            this.loading.y = position.y - (this.loading.height / 2);
+            const loadingPosition = util.getScreenCenter().subtract(this.loading.width / 2, this.loading.height / 2);
+            this.loading.x = loadingPosition.x;
+            this.loading.y = loadingPosition.y;
             this.app.stage.addChild(this.loading);
             this.app.render();
             setTimeout(() => {
                 for (let texture of this.content.getGeneratedTextures()) {
-                    //console.log("destyoyed: " + texture)
                     texture.destroy(true);
                 }
                 while (this.app.stage.children.length > 0) {

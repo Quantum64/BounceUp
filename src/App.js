@@ -10,7 +10,8 @@ class App extends Component {
     this.state = {
       ready: false,
       status: "Initializing",
-      search: ""
+      search: "",
+      selecting: false
     }
   }
 
@@ -44,7 +45,7 @@ class App extends Component {
     if (this.state.ready) {
       result = (
         <div>
-          {search}
+          {this.state.selecting && search}
           <div ref={element => this.game.injectPixiContext(element)} />
         </div>
       );

@@ -47,7 +47,7 @@ class Input {
         }
 
         // cheat mode
-        this.multiplier = 1;
+        //this.multiplier = 1;
     }
 
     mouseDown(event) {

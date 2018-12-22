@@ -13,6 +13,7 @@ class Editor {
         this.app = this.game.app;
         this.objects = [];
         this.generated = [];
+        this.window = new PIXI.Container();
 
         const center = util.getScreenCenter();
         this.x = center.x;
@@ -42,24 +43,24 @@ class Editor {
         this.background.beginFill(0x111111);
         this.background.drawRect(0, 0, this.app.renderer.width + 20, this.app.renderer.height + 20);
         this.background.filters = [this.backgroundShader.shader]
-        this.app.stage.addChild(this.background);
-        this.app.stage.interactive = true;
-        this.app.stage.mousedown = (event) => {
-            this.app.stage.dragging = true;
-            this.app.stage.startx = event.data.global.x + this.x;
-            this.app.stage.starty = event.data.global.y + this.y;
+        this.window.addChild(this.background);
+        this.window.interactive = true;
+        this.window.mousedown = (event) => {
+            this.window.dragging = true;
+            this.window.startx = event.data.global.x + this.x;
+            this.window.starty = event.data.global.y + this.y;
         }
-        this.app.stage.mousemove = (event) => {
-            if (this.app.stage.dragging) {
-                this.x = this.app.stage.startx - event.data.global.x;
-                this.y = this.app.stage.starty - event.data.global.y;
+        this.window.mousemove = (event) => {
+            if (this.window.dragging) {
+                this.x = this.window.startx - event.data.global.x;
+                this.y = this.window.starty - event.data.global.y;
             }
         }
-        this.app.stage.mouseup = (event) => {
-            this.app.stage.dragging = false;
+        this.window.mouseup = (event) => {
+            this.window.dragging = false;
         }
-        this.app.stage.mouseupoutside = (event) => {
-            this.app.stage.dragging = false;
+        this.window.mouseupoutside = (event) => {
+            this.window.dragging = false;
         }
 
         for (const object of this.level.objects) {
@@ -71,11 +72,12 @@ class Editor {
         }
 
         this.createPlayer();
+        this.app.stage.addChild(this.window);
     }
 
     tick(delta) {
         const center = util.getScreenCenter();
-        this.app.stage.position.set(center.x - this.x, center.y - this.y);
+        this.window.position.set(center.x - this.x, center.y - this.y);
         this.background.x = this.x - center.x - 10;
         this.background.y = this.y - center.y - 10;
 
@@ -95,7 +97,7 @@ class Editor {
         sprite.anchor.y = 0.5;
         sprite.x = this.x;
         sprite.y = this.y;
-        this.app.stage.addChild(sprite);
+        this.window.addChild(sprite);
 
         this.player = {
             sprite: sprite
@@ -135,13 +137,12 @@ class Editor {
     }
 
     addStageObject(x, y, definition) {
-        // Graphics
         const sprite = new PIXI.Sprite(definition.texture);
         sprite.x = x;
         sprite.y = y;
         sprite.scale.x = 1;
         sprite.scale.y = 1;
-        this.app.stage.addChild(sprite);
+        this.window.addChild(sprite);
 
         const object = {
             sprite: sprite
@@ -157,7 +158,7 @@ class Editor {
 
     addSprite(x, y, sheet, name, scale = 1) {
         const result = Sprites.createSprite(sheet, name, x, y, scale);
-        this.app.stage.addChild(result.sprite);
+        this.window.addChild(result.sprite);
         this.makeInteractive(result.sprite, () => {
             result.component.x = result.sprite.x;
             result.component.y = -result.sprite.y;

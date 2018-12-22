@@ -14,6 +14,10 @@ class Point {
         return new Point(this.x + x, this.y + y);
     }
 
+    subtract(x, y) {
+        return new Point(this.x - x, this.y - y);
+    }
+
     multiply(x, y) {
         return new Point(this.x * x, this.y * y);
     }
