@@ -3,15 +3,15 @@ import * as PIXI from 'pixi.js';
 import Point from './Point';
 import * as util from './util/Util';
 import Input from './Input';
-import * as shaders from './assets/shaders/Shaders';
+import Shaders from './Shaders';
 import Triangulator from './util/math/Triangulate'
 import Convex from './util/math/Convex';
 import * as PIXIParticles from 'pixi-particles';
 import Resources from './Resources';
-import Sprites from './assets/sprites/Sprites'
+import Sprites from './Sprites'
 
-const darkenShaders = shaders.darken();
-const lightenShaders = shaders.lighten();
+const darkenShaders = Shaders.darken();
+const lightenShaders = Shaders.lighten();
 
 const bakeScale = 1.5;
 
@@ -72,7 +72,7 @@ class World {
         }
         
         // Background
-        this.backgroundShader = shaders.sky();
+        this.backgroundShader = Shaders.sky();
         this.background = new PIXI.Graphics();
         this.background.beginFill(0x111111);
         this.background.drawRect(0, 0, this.app.renderer.width + 20, this.app.renderer.height + 20);

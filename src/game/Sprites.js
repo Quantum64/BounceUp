@@ -1,37 +1,39 @@
 import * as PIXI from 'pixi.js';
 import * as planck from 'planck-js';
-import Resources from '../../Resources';
-import Point from '../../Point';
-
-import fruitSprites from './fruit/Spritesheet'
-import fruitPhysics from './fruit/Physics'
+import Resources from './Resources';
+import Point from './Point';
 
 const debugPhysics = false;
 
-let loaded = 0;
-let sheets = [];
-const spritesheets = {
-    fruit: {
-        sprites: fruitSprites,
-        physics: fruitPhysics,
-        texture: () => Resources.getResource(Resources.loaded.fruit)
-    }
-}
-
 export default class Sprites {
+    static getSheets() {
+        return {
+            fruit: {
+                sprites: Resources.loaded.fruitSpritesheet.value,
+                physics: Resources.loaded.fruitPhysics.value,
+                texture: Resources.loaded.fruitTexture.value
+            }
+        };
+    }
+
+    static loaded = 0;
+    static sheets = [];
+    static spritesheets = {};
+
     static init(callback) {
-        for (const key in spritesheets) {
-            const spritesheet = spritesheets[key];
-            spritesheet.spritesheet = new PIXI.Spritesheet(spritesheet.texture().texture.baseTexture, spritesheet.sprites);
-            sheets.push(spritesheet.spritesheet);
+        this.spritesheets = this.getSheets();
+        for (const key in  this.spritesheets) {
+            const spritesheet = this.spritesheets[key];
+            spritesheet.spritesheet = new PIXI.Spritesheet(spritesheet.texture.texture.baseTexture, spritesheet.sprites.data);
+            this.sheets.push(spritesheet.spritesheet);
         }
         this.loadNext(callback);
     }
 
     static loadNext(callback) {
-        sheets[loaded].parse(() => {
-            loaded++;
-            if (loaded === sheets.length) {
+        this.sheets[this.loaded].parse(() => {
+            this.loaded++;
+            if (this.loaded ===  this.sheets.length) {
                 callback();
                 return;
             }
@@ -40,12 +42,12 @@ export default class Sprites {
     }
 
     static getSpritesheets() {
-        return spritesheets;
+        return  this.spritesheets;
     }
 
     static create(sheet, name, body, x, y, scale = 1) {
         const result = this.createSprite(sheet, name, x, y, scale);
-        const physics = spritesheets[sheet].physics;
+        const physics = this.spritesheets[sheet].physics.data;
         const fixtures = [];
         const debug = [];
         for (const element of physics.rigidBodies) {
@@ -69,7 +71,7 @@ export default class Sprites {
     }
 
     static createSprite(sheet, name, x = 0, y = 0, scale = 1) {
-        const sprite = new PIXI.Sprite(spritesheets[sheet].spritesheet.textures[name]);
+        const sprite = new PIXI.Sprite(this.spritesheets[sheet].spritesheet.textures[name]);
         sprite.scale.x = scale;
         sprite.scale.y = scale;
         sprite.x = x;

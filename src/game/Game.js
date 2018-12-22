@@ -1,14 +1,13 @@
 import * as PIXI from 'pixi.js';
-import * as PIXIFilters from 'pixi-filters';
 import World from './World';
 import * as planck from 'planck-js';
 import Resources from './Resources'
-import Sprites from './assets/sprites/Sprites'
-import testlevel from './assets/levels/Test'
+import Sprites from './Sprites'
 import Editor from './Editor';
 import * as util from './util/Util';
 import Point from './Point';
 import Levels from './assets/levels/Levels';
+import Shaders from './Shaders';
 
 class Game {
     constructor() {
@@ -92,6 +91,8 @@ class Game {
     loadSprites() {
         this.callback(false, "Generating textures...");
         this.loading = new PIXI.Sprite(Resources.getResource(Resources.loaded.loading).texture);
+        Resources.postLoad();
+        Shaders.init();
         Sprites.init(() => this.buildWorld());
     }
 

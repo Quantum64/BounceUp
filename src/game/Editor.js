@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js';
 import Point from './Point';
 import * as util from './util/Util';
-import * as shaders from './assets/shaders/Shaders';
-import Sprites from './assets/sprites/Sprites'
+import Shaders from './Shaders';
+import Sprites from './Sprites'
 import Levels from './assets/levels/Levels'
 
 class Editor {
@@ -38,7 +38,7 @@ class Editor {
         }
 
         // Background
-        this.backgroundShader = shaders.sky();
+        this.backgroundShader = Shaders.sky();
         this.background = new PIXI.Graphics();
         this.background.beginFill(0x111111);
         this.background.drawRect(0, 0, this.app.renderer.width + 20, this.app.renderer.height + 20);

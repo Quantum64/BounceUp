@@ -1,4 +1,3 @@
-export default `
 precision mediump float;
 
 varying vec2 vTextureCoord;
@@ -16,4 +15,4 @@ void main(){
 	fg.g = mix(color1.g, color2.g, uvs.y *  amount);
 
 	gl_FragColor = fg;
-}`
+}
