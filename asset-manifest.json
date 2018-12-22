@@ -1,13 +1,13 @@
 {
-  "main.css": "/BounceUp/static/css/main.5fb0f761.chunk.css",
-  "main.js": "/BounceUp/static/js/main.c7b018cc.chunk.js",
-  "main.js.map": "/BounceUp/static/js/main.c7b018cc.chunk.js.map",
-  "static/js/1.5803dc22.chunk.js": "/BounceUp/static/js/1.5803dc22.chunk.js",
-  "static/js/1.5803dc22.chunk.js.map": "/BounceUp/static/js/1.5803dc22.chunk.js.map",
+  "main.css": "/BounceUp/static/css/main.d3d181b4.chunk.css",
+  "main.js": "/BounceUp/static/js/main.b7bc9191.chunk.js",
+  "main.js.map": "/BounceUp/static/js/main.b7bc9191.chunk.js.map",
+  "static/js/1.1f5301c6.chunk.js": "/BounceUp/static/js/1.1f5301c6.chunk.js",
+  "static/js/1.1f5301c6.chunk.js.map": "/BounceUp/static/js/1.1f5301c6.chunk.js.map",
   "runtime~main.js": "/BounceUp/static/js/runtime~main.92a0e2ce.js",
   "runtime~main.js.map": "/BounceUp/static/js/runtime~main.92a0e2ce.js.map",
-  "static/css/main.5fb0f761.chunk.css.map": "/BounceUp/static/css/main.5fb0f761.chunk.css.map",
+  "static/css/main.d3d181b4.chunk.css.map": "/BounceUp/static/css/main.d3d181b4.chunk.css.map",
   "index.html": "/BounceUp/index.html",
-  "precache-manifest.911b60120a801dac265a599096c637de.js": "/BounceUp/precache-manifest.911b60120a801dac265a599096c637de.js",
+  "precache-manifest.c074bd981435bef4e46fce4277127e4e.js": "/BounceUp/precache-manifest.c074bd981435bef4e46fce4277127e4e.js",
   "service-worker.js": "/BounceUp/service-worker.js"
 }

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/BounceUp/precache-manifest.911b60120a801dac265a599096c637de.js"
+  "/BounceUp/precache-manifest.c074bd981435bef4e46fce4277127e4e.js"
 );
 
 workbox.clientsClaim();
